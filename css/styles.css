@@ -170,6 +170,15 @@ html {
     opacity: 50;
 }
 
+.opacity-0 {
+    opacity: 0;
+}
+
+#resultado {
+    display: flex;
+    align-content: center;
+}
+
 @-webkit-keyframes sk-circleFadeDelay {
     0%,
     39%,

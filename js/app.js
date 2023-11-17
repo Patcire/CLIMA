@@ -6,6 +6,7 @@ const campo_ciudad = document.querySelector('#ciudad')
 const campo_pais = document.querySelector('#pais')
 const boton = document.querySelector('input[type=submit]')
 const resultado = document.querySelector('#resultado')
+const frase_escoge = resultado.firstElementChild
 const clave_api = "2ae522d72f43de5c7e0726ab0873f05c"
 
 // Funciones
@@ -51,37 +52,51 @@ const validar = (e) => {
 
 }
 
-
 const peticion_openweather = () => {
     const pais = campo_pais.options[campo_pais.selectedIndex].value
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${campo_ciudad.value},${pais}&units=metric&appid=${clave_api}`
     //el parámetro metrics es para usar Celsius
-    alert(url)
     fetch(url)
         .then(respuesta => respuesta.json())
-        .then(data => {
-            console.log(data)
-            mostrar_datos(data)
-        })
+        .then(data => mostrar_datos(data))
         .catch(error => alert(error))
 }
 
-// Eventos
+const ocultar_frase_escoge = () => {
+    frase_escoge.classList.add('opacity-0')
+}
 
-document.addEventListener('DOMContentLoaded', desactivar_boton)
-campo_ciudad.addEventListener('blur', (e) => validar(e))
-campo_pais.addEventListener('blur', (e) => validar(e))
-boton.addEventListener('click', peticion_openweather)
+const mostrar_frase_escoge = () => {
+    frase_escoge.classList.remove('opacity-0')
+}
 
 const mostrar_datos = (datos) => {
+    ocultar_frase_escoge()
     console.log(datos)
-    const seccion = resultado.createElement("section")
+    const seccion = document.createElement("section")
+    resultado.appendChild(seccion)
     seccion.innerHTML = `
                         <p>Temperatura actual: ${datos.main.temp}</p>
                         <p>Max Temp: ${datos.main.temp_max}</p>
                         <p>Min temp:${datos.main.temp_min} </p>
                         `
 }
+
+
+// Eventos
+
+document.addEventListener('DOMContentLoaded', (e) => {
+    mostrar_frase_escoge()
+    desactivar_boton()
+})
+campo_ciudad.addEventListener('blur', (e) => validar(e))
+campo_pais.addEventListener('blur', (e) => validar(e))
+boton.addEventListener('click', (e) => {
+    e.preventDefault()
+    ocultar_frase_escoge()
+    peticion_openweather()
+})
+
 
 
 
